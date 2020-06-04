@@ -2,6 +2,9 @@ language: go
 dist: xenial
 sudo: required
 install: true
+arch:
+    - amd64
+    - arm64
 services:
   - docker
 go:
@@ -20,6 +23,16 @@ jobs:
         - RUN_RESILIENCY_TESTS=0
     - os: linux
       arch: amd64
+      env:
+        - RUN_FEATURE_TESTS=0
+        - RUN_RESILIENCY_TESTS=1
+    - os: linux
+      arch: arm64
+      env:
+        - RUN_FEATURE_TESTS=1
+        - RUN_RESILIENCY_TESTS=0
+    - os: linux
+      arch: arm64
       env:
         - RUN_FEATURE_TESTS=0
         - RUN_RESILIENCY_TESTS=1
@@ -50,11 +63,3 @@ script:
 
 after_success:
   - make _push_image
-
-notifications:
-  email:
-    recipients:
-      - kiran.mova@mayadata.io
-      - utkarsh.tripathi@mayadata.io
-      - vitta@mayadata.io
-      - payes.anand@mayadata.io
